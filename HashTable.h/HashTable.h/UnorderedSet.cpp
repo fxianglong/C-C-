@@ -16,6 +16,7 @@ namespace bit
 		};
 
 	public:
+		typedef typename BUCKET_HASH::HashTable<K, K, SetKeyOfT, Hash>::iterator iterator;
 		void insert(const K& k)
 		{
 			_ht.Insert(k);

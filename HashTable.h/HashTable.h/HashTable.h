@@ -324,24 +324,52 @@ namespace BUCKET_HASH
 	{
 		typedef HashNode<T> Node;
 		Node* _node;
-		HashTable<K, T, KeyofT, Hash>* _ht;
-
+		HashTable<K, T, KeyOfT, Hash>* _ht;
+		typedef HashTableIterator<K, T, KeyOfT, Hash> Self;
 		HashTableIterator(Node* node, HashTable<K, T, KeyOfT, Hash>* ht)
 			:_node(node)
 			, _ht(ht)
 		{}
 
 
-		/*	operator*()
-		operator->()
-		operator++()
-		operator!=()*/
+		T& operator*(){
+			return _node->_data;
+		}
+		T* operator->(){
+			return &_node->_data;
+		}
+		Self operator++(){
+			if (_node->_next){
+				_node = _node->_next;
+			}
+			else
+			{
+				KeyOfT kot;
+				size_t index = _ht->HashFunc(kot(_node->_data), _ht->_tables.size());
+				for (index < _ht->_tables.size(); ++index){
+					Node* bucket = _ht->_tables[index];
+					if (bucket){
+						_node= bucket;
+						return *this;
+					}
+				}
+				_node = nullptr;
+			}
+			return *this;
+		}
+		bool operator!=(const Self&s){
+			return _node != s._node;
+		}
 	};
 
 	template<class K, class T, class KeyOfT, class Hash>
 	class HashTable
 	{
 		typedef HashNode<T> Node;
+		//сят╙
+
+		template<class K,class T,class KeyofT,class Hash>
+		friend struct class HashTableIterator;
 	public:
 		typedef HashTableIterator<K, T, KeyOfT, Hash> iterator;
 		iterator begin()

@@ -16,6 +16,13 @@ namespace bit
 		};
 
 	public:
+		typedef typename BUCKET_HASH::HashTable<K, pair<K, V>, MapKeyOfT, Hash>::iterator iterator;
+		iterator begin(){
+			return _ht.begin();
+		}
+		iterator end(){
+			return _ht.end();
+		}
 		void insert(const pair<K, V>& kv)
 		{
 			_ht.Insert(kv);
